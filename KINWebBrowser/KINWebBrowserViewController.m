@@ -495,6 +495,10 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
             
             UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[URLForActivityItem] applicationActivities:activities];
             
+            if ([self.delegate respondsToSelector:@selector(webBrowser:willDisplayUIActivityController:)])  {
+                [self.delegate webBrowser:self willDisplayUIActivityController:controller];
+            }
+            
             if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
                 if(self.actionPopoverController) {
                     [self.actionPopoverController dismissPopoverAnimated:YES];
