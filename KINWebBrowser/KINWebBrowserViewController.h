@@ -57,6 +57,8 @@
 - (void)webBrowserViewControllerWillDismiss:(KINWebBrowserViewController*)viewController;
 - (void)webBrowser:(KINWebBrowserViewController *)webBrowser willDisplayUIActivityController:(UIActivityViewController *)activityController;
 
+// Return YES if delegate will handle deciding policy. If YES, delegate must call decisionHandler. Otherwise, it must not call decisionHandler.
+- (BOOL) webBrowser:(KINWebBrowserViewController *)webBrowser decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
 @end
 
 
