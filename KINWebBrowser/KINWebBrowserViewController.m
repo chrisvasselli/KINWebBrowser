@@ -37,14 +37,13 @@
 
 static void *KINWebBrowserContext = &KINWebBrowserContext;
 
-@interface KINWebBrowserViewController () <UIAlertViewDelegate>
+@interface KINWebBrowserViewController ()
 
 @property (nonatomic, assign) BOOL previousNavigationControllerToolbarHidden, previousNavigationControllerNavigationBarHidden;
 @property (nonatomic, strong) UIBarButtonItem *backButton, *forwardButton, *refreshButton, *stopButton, *fixedSeparator, *flexibleSeparator;
 @property (nonatomic, strong) NSTimer *fakeProgressTimer;
 @property (nonatomic, strong) UIPopoverController *actionPopoverController;
 @property (nonatomic, strong) NSURL *URLToLaunchWithPermission;
-@property (nonatomic, strong) UIAlertView *externalAppPermissionAlertView;
 
 @end
 
@@ -101,9 +100,7 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
         self.actionButtonHidden = NO;
         self.showsURLInNavigationBar = NO;
         self.showsPageTitleInNavigationBar = YES;
-        
-        self.externalAppPermissionAlertView = [[UIAlertView alloc] initWithTitle:@"Leave this app?" message:@"This web page is trying to open an outside app. Are you sure you want to open it?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Open App", nil];
-        
+                
     }
     return self;
 }
@@ -254,7 +251,7 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
             }
         }
         else if([[UIApplication sharedApplication] canOpenURL:URL]) {
-            [self launchExternalAppWithURL:URL];
+            // Removed support for opening external application, because we weren't using it and it was using UIAlertView (cvasselli)
             decisionHandler(WKNavigationActionPolicyCancel);
             return;
         }
@@ -446,25 +443,6 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
 - (BOOL)externalAppRequiredToOpenURL:(NSURL *)URL {
     NSSet *validSchemes = [NSSet setWithArray:@[@"http", @"https"]];
     return ![validSchemes containsObject:URL.scheme];
-}
-
-- (void)launchExternalAppWithURL:(NSURL *)URL {
-    self.URLToLaunchWithPermission = URL;
-    if (![self.externalAppPermissionAlertView isVisible]) {
-        [self.externalAppPermissionAlertView show];
-    }
-
-}
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if(alertView == self.externalAppPermissionAlertView) {
-        if(buttonIndex != alertView.cancelButtonIndex) {
-            [[UIApplication sharedApplication] openURL:self.URLToLaunchWithPermission];
-        }
-        self.URLToLaunchWithPermission = nil;
-    }
 }
 
 #pragma mark - Dismiss
