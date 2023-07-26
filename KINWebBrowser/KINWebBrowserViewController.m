@@ -42,7 +42,7 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
 @property (nonatomic, assign) BOOL previousNavigationControllerToolbarHidden, previousNavigationControllerNavigationBarHidden;
 @property (nonatomic, strong) UIBarButtonItem *backButton, *forwardButton, *refreshButton, *stopButton, *fixedSeparator, *flexibleSeparator;
 @property (nonatomic, strong) NSTimer *fakeProgressTimer;
-#if !TARGET_OS_XR
+#if !TARGET_OS_VISION
 @property (nonatomic, strong) UIPopoverController *actionPopoverController;
 #endif
 @property (nonatomic, strong) NSURL *URLToLaunchWithPermission;
@@ -403,7 +403,7 @@ static void *KINWebBrowserContext = &KINWebBrowserContext;
             }
             
             if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-#if !TARGET_OS_XR
+#if !TARGET_OS_VISION
                 if(self.actionPopoverController) {
                     [self.actionPopoverController dismissPopoverAnimated:YES];
                 }
